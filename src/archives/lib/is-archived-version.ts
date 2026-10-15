@@ -14,7 +14,11 @@ export function isArchivedVersion(req: ExtendedRequest): IsArchivedInfo {
   return isArchivedVersionByPath(pathToCheck || '')
 }
 
-export function isArchivedVersionByPath(pathToCheck: string): IsArchivedInfo {
+export function isArchivedVersionByPath(pathToCheck: unknown): IsArchivedInfo {
+  if (typeof pathToCheck !== 'string') {
+    return {}
+  }
+
   // ignore paths that don't have an enterprise version number
   if (
     !(
