@@ -24,15 +24,21 @@ export const UtmPreserver = () => {
 
     // Check if a link should have UTM parameters preserved
     const shouldPreserveUtm = (url: string): boolean => {
-      const lowercaseUrl = url.toLowerCase()
+      try {
+        const parsedUrl = new URL(url)
+        const protocol = parsedUrl.protocol.toLowerCase()
+        const hostname = parsedUrl.hostname.toLowerCase()
 
-      // Preserve UTM for any external github.com links (including subdomains like blog.github.com)
-      // but NOT for docs.github.com (which are internal links anyway)
-      const hasProtocol = lowercaseUrl.startsWith('https://') || lowercaseUrl.startsWith('http://')
-      const isGithubCom = lowercaseUrl.includes('github.com')
-      const isDocsGithubCom = lowercaseUrl.includes('docs.github.com')
+        // Preserve UTM for github.com and its subdomains (for example: blog.github.com),
+        // but NOT for docs.github.com.
+        const hasHttpProtocol = protocol === 'https:' || protocol === 'http:'
+        const isGithubComHost = hostname === 'github.com' || hostname.endsWith('.github.com')
+        const isDocsGithubComHost = hostname === 'docs.github.com'
 
-      return hasProtocol && isGithubCom && !isDocsGithubCom
+        return hasHttpProtocol && isGithubComHost && !isDocsGithubComHost
+      } catch {
+        return false
+      }
     }
 
     // Add UTM parameters to a URL
