@@ -36,7 +36,7 @@ describe('GitHub Apps transformer', () => {
       expect(res.body).toMatch(/^## /m)
 
       // Should not contain HTML comments
-      expect(res.body).not.toMatch(/<!--.*?-->/)
+      expect(res.body).not.toMatch(/<!--[\s\S]*?-->/)
     })
 
     test('user-to-server-rest page renders with markdown structure', async () => {
