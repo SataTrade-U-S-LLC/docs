@@ -70,7 +70,11 @@ export const pageValidationMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  let { pathname } = req.pageinfo
+  const rawPathname = req.pageinfo.pathname
+  if (typeof rawPathname !== 'string') {
+    return res.status(400).json({ error: `'pathname' query invalid` })
+  }
+  let pathname = rawPathname
   // We can't use the `findPage` middleware utility function because we
   // need to know when the pathname is a redirect.
   // This is important so that the final `pathname` value
